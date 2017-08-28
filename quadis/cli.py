@@ -62,6 +62,9 @@ def check_card(config, silent=False, return_row=False):
             row_num = csv_list.index(row)
 
     if card_found:
+        if return_row:
+            return_val = row_num
+
         if last_used_date == date_today.strftime('%m/%d/%Y'):
             if not silent:
                 click.echo("card used today")
