@@ -18,7 +18,7 @@ def check_card(csv_data, card_num, return_row=False):
     row_num = 0  # when and if the card number is found,
                  # the row number it's on will be stored here
     csv_file = open(csv_data)
-    csv_list = list(csv.reader(csv_file, delimiter=','))  # To allow edditing
+    csv_list = list(csv.reader(csv_file, delimiter=','))  # To allow editing
     csv_file.close()  # So the csv file can be opened in write mode
     csv_file = open(csv_data, 'w')
     csv_writer = csv.writer(csv_file, delimiter=',')
@@ -60,7 +60,9 @@ def add_card(csv_file, card_num, name, last_used_date, row_num):
     csv_file = open(csv_file, 'a')
     csv_writer = csv.writer(csv_file, delimiter=',')
     row_list = [0, 0, 0]
-    return_val = None
+    return_val = None  #0: success
+                       #1: card exists
+                       #2: invalid date format
 
     if row_num is not 0:  #don't modify the CSV file if the card exists
         csv_file.close()
@@ -85,17 +87,18 @@ def add_card(csv_file, card_num, name, last_used_date, row_num):
 def remove_card(csv_data, card_num):
     '''deletes the card with the given number from the CSV file'''
     csv_file = open(csv_data)
-    csv_list = list(csv.reader(csv_file, delimiter=','))  # To allow edditing
+    csv_list = list(csv.reader(csv_file, delimiter=','))
     csv_file.close()  # So the csv file can be opened in write mode
     csv_file = open(csv_data, 'w')
     csv_writer = csv.writer(csv_file, delimiter=',')
     return_val = 1
 
+    #write all rows except the one that needs to be deleted
     for row in csv_list:
         if str(card_num) not in row:
             csv_writer.writerow(row)
 
         else:
-            return_val = 0
+            return_val = 0  #return 0 if the row was found
     csv_file.close()
     return return_val
