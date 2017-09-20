@@ -67,17 +67,35 @@ def add_card(csv_file, card_num, name, last_used_date, row_num):
         return_val = 1
 
     else:
-        try:
-            datetime.strptime(last_used_date, '%m/%d/%Y')
-        except ValueError:
-            csv_file.close()
-            return_val = 2
+        row_list[CARD_NUM_COLUMN] = card_num
+        row_list[NAME_COLUMN] = name
+        row_list[LAST_USED_COLUMN] = last_used_date
+
+        if last_used_date is not 'N/A':
+            try:
+                datetime.strptime(last_used_date, '%m/%d/%Y')
+            except ValueError:
+                return_val = 2
+            else:
+                csv_writer.writerow(row_list)
+                return_val = 0
+    csv_file.close()
+    return return_val
+
+def remove_card(csv_data, card_num):
+    '''deletes the card with the given number from the CSV file'''
+    csv_file = open(csv_data)
+    csv_list = list(csv.reader(csv_file, delimiter=','))  # To allow edditing
+    csv_file.close()  # So the csv file can be opened in write mode
+    csv_file = open(csv_data, 'w')
+    csv_writer = csv.writer(csv_file, delimiter=',')
+    return_val = 1
+
+    for row in csv_list:
+        if str(card_num) not in row:
+            csv_writer.writerow(row)
 
         else:
-            row_list[CARD_NUM_COLUMN] = card_num
-            row_list[NAME_COLUMN] = name
-            row_list[LAST_USED_COLUMN] = last_used_date
-            csv_writer.writerow(row_list)
-            csv_file.close()
             return_val = 0
+    csv_file.close()
     return return_val
