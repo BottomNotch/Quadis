@@ -51,7 +51,7 @@ def add_card(config, name, used_today):
     last_used_month = None
     last_used_day = None
     last_used_year = None
-    last_used_date = "N/A"
+    last_used_date = 'N/A'
 
     if row_num is not 0:
         click.echo('a card with the number {0} already exists on row {1}'.format(
@@ -72,4 +72,17 @@ def add_card(config, name, used_today):
                 last_used_date = "{0}/{1}/{2}".format(last_used_month,
                                                       last_used_day, last_used_year)
 
-            main.add_card(config['csv_file'], config['card_num'], name, last_used_date, row_num)
+            main.add_card(config['csv_file'], config['card_num'], name,
+                          last_used_date, row_num)
+
+@cli.command()
+@pass_config
+def remove_card(config):
+    '''remove the specified card'''
+    returned_val = main.remove_card(config['csv_file'], config['card_num'])
+
+    if returned_val is 0:
+        click.echo('card number {0} removed'.format(config['card_num']))
+
+    elif returned_val is 1:
+        click.echo('card number {0} not found'.format(config['card_num']))
