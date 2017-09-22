@@ -102,3 +102,34 @@ def remove_card(csv_data, card_num):
             return_val = 0  #return 0 if the row was found
     csv_file.close()
     return return_val
+
+def change_card(csv_data, card_num, new_card_num, name, last_used_date):
+    '''change the information connected a given card number (including the card number)'''
+    csv_file = open(csv_data)
+    csv_list = list(csv.reader(csv_file, delimiter=','))
+    csv_file.close()  # So the csv file can be opened in write mode
+    csv_file = open(csv_data, 'w')
+    csv_writer = csv.writer(csv_file, delimiter=',')
+    return_val = None  # 0: success
+                       # 1: the new card number already exists
+                       # 2: card not found
+
+    if all([new_card_num is not card_num,
+            check_card(csv_data, new_card_num) is not 0]):
+        return_val = 1
+
+    else:
+        for row in csv_list:
+            if card_num is row[CARD_NUM_COLUMN]:
+                row[CARD_NUM_COLUMN] = new_card_num
+                row[NAME_COLUMN] = name
+                row[LAST_USED_COLUMN] = last_used_date
+                return_val = 0
+                continue
+
+            else:
+                return_val = 2
+
+    csv_writer.writerows(csv_list)
+    csv_file.close()
+    return return_val
