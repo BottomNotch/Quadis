@@ -68,7 +68,7 @@ def add_card(config, name, used_today):
         if name is None:
             name = click.prompt('please enter a name', type=str)
 
-        if used_today:
+        if used_today or click.confirm('used today?'):
             last_used_date = main.date_today.strftime('%m/%d/%Y')
 
         else:
@@ -104,7 +104,10 @@ def change_card(config):
             card_info[main.NAME_COLUMN] = click.prompt('please enter the new name', type=str)
 
         if click.confirm('change last used date?'):
-            card_info[main.LAST_USED_COLUMN] = set_date()
+            if click.confirm('change to today?'):
+                card_info[main.LAST_USED_COLUMN] = main.date_today.strftime('%m/%d/%Y')
+            else:
+                card_info[main.LAST_USED_COLUMN] = set_date()
 
         result = main.change_card(config['csv_file'], config['card_num'],
                                   card_info[main.CARD_NUM_COLUMN],
