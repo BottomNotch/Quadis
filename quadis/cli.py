@@ -37,7 +37,8 @@ def cli(config, csv_file, card_num):
 def check_card(config):
     '''check a card to make sure it is on the csv file and has not been
     used today'''
-    card_state = main.check_card(config['csv_file'], config['card_num'])
+    card_state = main.check_card(config['csv_file'], config['card_num'],
+                                 update_card=click.confirm('update card?'))
 
     if card_state == 0:
         click.echo(

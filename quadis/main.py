@@ -35,7 +35,7 @@ def card_info(csv_file, card_num):
 
     return return_val
 
-def check_card(csv_data, card_num, return_row=False):
+def check_card(csv_data, card_num, return_row=False, update_card=True):
     '''check a card to make sure it is on the csv file and has not been
     used today (also has statements and return_row which makes this
     return the row number of the card'''
@@ -70,7 +70,8 @@ def check_card(csv_data, card_num, return_row=False):
             return_val = 2  #card used today
 
         else:
-            csv_list[row_num][LAST_USED_COLUMN] = date_today.strftime('%m/%d/%Y')
+            if update_card:
+                csv_list[row_num][LAST_USED_COLUMN] = date_today.strftime('%m/%d/%Y')
             return_val = 1  #card found and not used today
     else:
         return_val = 0  #card not found
