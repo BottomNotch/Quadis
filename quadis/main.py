@@ -24,11 +24,11 @@ def check_card(csv_data, card_num, return_row=False):
     csv_writer = csv.writer(csv_file, delimiter=',')
 
     return_val = None  # if return_row is True this the row of the card will
-                    # be returned (or 0 if not found) if False the
-                    # following will be returned:
-                    # 0 = card not found
-                    # 1 = card found and has not been used today
-                    # 2 = card used today
+                       # be returned (or 0 if not found) if False the
+                       # following will be returned:
+                       # 0 = card not found
+                       # 1 = card found and has not been used today
+                       # 2 = card used today
     last_used_date = ''
 
     for row in csv_list:  # scan CSV file for card number
