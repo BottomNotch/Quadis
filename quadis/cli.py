@@ -6,6 +6,15 @@ import click
 # pas a dictionary to sub-commands
 pass_config = click.make_pass_decorator(dict, ensure=True)
 
+def set_date():
+    '''prompts user to set the last used date of the card'''
+    last_used_month = click.prompt('please enter a month', type=int)
+    last_used_day = click.prompt('please enter a day of month', type=int)
+    last_used_year = click.prompt('please enter a year', type=int)
+    last_used_date = "{0}/{1}/{2}".format(last_used_month,
+                                              last_used_day, last_used_year)
+    return last_used_date
+
 @click.group()
 @click.argument('csv_file')
 @click.option('-n', '--card-num', type=click.INT,
@@ -48,9 +57,6 @@ def check_card(config):
 def add_card(config, name, used_today):
     row_num = main.check_card(config['csv_file'], config['card_num'],
                               return_row=True)
-    last_used_month = None
-    last_used_day = None
-    last_used_year = None
     last_used_date = 'N/A'
 
     if row_num is not 0:
@@ -66,12 +72,7 @@ def add_card(config, name, used_today):
 
         else:
             if click.confirm('set date?'):
-                last_used_month = click.prompt('please enter a month', type=int)
-                last_used_day = click.prompt('please enter a day of month', type=int)
-                last_used_year = click.prompt('please enter a year', type=int)
-                last_used_date = "{0}/{1}/{2}".format(last_used_month,
-                                                      last_used_day, last_used_year)
-
+                last_used_date = set_date()
             main.add_card(config['csv_file'], config['card_num'], name,
                           last_used_date, row_num)
 
@@ -86,3 +87,18 @@ def remove_card(config):
 
     elif returned_val is 1:
         click.echo('card number {0} not found'.format(config['card_num']))
+
+@cli.command()
+@pass_config
+def change_card(config):
+    if click.confirm('change number?'):
+        card_num = click.prompt('please enter the new card number', type=int)
+
+    if click.confirm('change name?'):
+        name = click.prompt('please enter the new name', type=str)
+
+    if click.confirm('change last used date?'):
+        last_used_date = set_date()
+
+    main.change_card(config['csv_file'], config['card_num'], card_num, name,
+                     last_used_date)
