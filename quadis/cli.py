@@ -91,14 +91,33 @@ def remove_card(config):
 @cli.command()
 @pass_config
 def change_card(config):
-    if click.confirm('change number?'):
-        card_num = click.prompt('please enter the new card number', type=int)
+    result = None
+    card_info = main.card_info(config['csv_file'], config['card_num'])
+    
+    if card_info is not 0:
+        if click.confirm('change number?'):
+            card_info[main.CARD_NUM_COLUMN] = click.prompt(
+                'please enter the new card number', type=int)
 
-    if click.confirm('change name?'):
-        name = click.prompt('please enter the new name', type=str)
+        if click.confirm('change name?'):
+            card_info[main.NAME_COLUMN] = click.prompt('please enter the new name', type=str)
 
-    if click.confirm('change last used date?'):
-        last_used_date = set_date()
+        if click.confirm('change last used date?'):
+            card_info[main.LAST_USED_COLUMN] = set_date()
 
-    main.change_card(config['csv_file'], config['card_num'], card_num, name,
-                     last_used_date)
+        result = main.change_card(config['csv_file'], config['card_num'],
+                                  card_info[main.CARD_NUM_COLUMN],
+                                  card_info[main.NAME_COLUMN],
+                                  card_info[main.LAST_USED_COLUMN])
+
+        if result is 0:
+            click.echo('card information changed successfully')
+        elif result is 1:
+            click.echo('card number {0} not found'
+                       .format(config['card_num']))
+        elif result is 2:
+            click.echo('card number {0} already exists'
+                       .format(card_info[main.CARD_NUM_COLUMN]))
+        elif result is 3:
+            click.echo('{0} is an invalid date'
+                       .format(card_info[main.LAST_USED_COLUMN]))

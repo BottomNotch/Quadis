@@ -10,6 +10,31 @@ LAST_USED_COLUMN = 2
 
 date_today = datetime.now()
 
+def check_date(date_str):
+    '''used to make sure the given string is in the correct format'''
+    try:
+        datetime.strptime(date_str, '%m/%d/%Y')
+    except ValueError:
+        return_val = 1
+    else:
+        return_val = 0
+    return return_val
+
+
+def card_info(csv_file, card_num):
+    csv_file = open(csv_file)
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    return_val = None
+
+    for row in csv_reader:
+        if row[CARD_NUM_COLUMN] == str(card_num):
+            return_val = row
+            continue
+        else:
+            return_val = 1
+
+    return return_val
+
 def check_card(csv_data, card_num, return_row=False):
     '''check a card to make sure it is on the csv file and has not been
     used today (also has statements and return_row which makes this
@@ -73,14 +98,11 @@ def add_card(csv_file, card_num, name, last_used_date, row_num):
         row_list[NAME_COLUMN] = name
         row_list[LAST_USED_COLUMN] = last_used_date
 
-        if last_used_date is not 'N/A':
-            try:
-                datetime.strptime(last_used_date, '%m/%d/%Y')
-            except ValueError:
-                return_val = 2
-            else:
-                csv_writer.writerow(row_list)
-                return_val = 0
+        if last_used_date is 'N/A' or check_date(last_used_date) is 0:
+            csv_writer.writerow(row_list)
+            return_val = 0
+        else:
+            return_val = 2
     csv_file.close()
     return return_val
 
@@ -111,24 +133,30 @@ def change_card(csv_data, card_num, new_card_num, name, last_used_date):
     csv_file = open(csv_data, 'w')
     csv_writer = csv.writer(csv_file, delimiter=',')
     return_val = None  # 0: success
-                       # 1: the new card number already exists
-                       # 2: card not found
+                       # 1: card not found
+                       # 2: the new card number already exists
+                       # 3: invalid date
 
     if all([new_card_num is not card_num,
             check_card(csv_data, new_card_num) is not 0]):
-        return_val = 1
+        return_val = 2
+
+    elif check_date(last_used_date) is 1:
+        return_val = 3
 
     else:
         for row in csv_list:
-            if card_num is row[CARD_NUM_COLUMN]:
-                row[CARD_NUM_COLUMN] = new_card_num
-                row[NAME_COLUMN] = name
-                row[LAST_USED_COLUMN] = last_used_date
+            print(row[0])
+            if str(card_num) == row[CARD_NUM_COLUMN]:
+                index = csv_list.index(row)
+                csv_list[index][CARD_NUM_COLUMN] = new_card_num
+                csv_list[index][NAME_COLUMN] = name
+                csv_list[index][LAST_USED_COLUMN] = last_used_date
                 return_val = 0
                 continue
 
             else:
-                return_val = 2
+                return_val = 1
 
     csv_writer.writerows(csv_list)
     csv_file.close()
