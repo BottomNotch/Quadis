@@ -26,17 +26,16 @@ def card_info(csv_data, card_num):
     return_val = None
     index = 0
     for row in csv_reader:
-        index += 1
         if row[csv_layout.index('card_num')] == str(card_num):
             for item in csv_layout:
                 card_dict[item] = row[csv_layout.index(item)]
             card_dict['row_num'] = index
-            return_val = card_dict
+            return card_dict
             break
         else:
             return_val = 1
-
-    return return_val
+        index += 1
+    return 1
 
 def check_card(csv_data, card_num, update_card=True):
     '''check a card to make sure it is on the csv file and has not been
@@ -128,8 +127,7 @@ def change_card(csv_data, card_num, card_dict):
                        # 2: the new card number already exists
                        # 3: invalid date
 
-    if all([card_dict['card_num'] is not card_num,
-            check_card(csv_data, card_dict['card_num']) is not 0]):
+    if card_info(csv_data, card_dict['card_num']) != 1:
         return_val = 2
 
     elif check_date(card_dict['last_used_date']) is 1:
@@ -137,7 +135,7 @@ def change_card(csv_data, card_num, card_dict):
 
     else:
         for row in csv_list:
-            if str(card_num) == row[csv_layout.index(card_num)]:
+            if str(card_num) == row[csv_layout.index('card_num')]:
                 for item in csv_layout:
                     row[csv_layout.index(item)] = card_dict[item]
                 return_val = 0

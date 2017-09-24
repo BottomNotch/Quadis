@@ -120,6 +120,13 @@ def change_card(config):
             else:
                 card_info['last_used_date'] = set_date()
 
+        for item in main.csv_layout:
+            if all([item is not 'last_used_date', item is not 'name', item is not 'card_num',
+                    click.confirm('change {0} for this card?'.format(item))]):
+                card_info[item] = click.prompt(
+                    'to what would you like to set {0} for this card?'
+                    .format(item), type=str)
+
         result = main.change_card(config['csv_file'], config['card_num'],
                                   card_info)
 
@@ -134,3 +141,5 @@ def change_card(config):
         elif result is 3:
             click.echo('{0} is an invalid date'
                        .format(card_info['last_used_date']))
+    else:
+        click.echo('card does not exist')
