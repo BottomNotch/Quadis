@@ -26,7 +26,7 @@ def card_info(csv_data, card_num):
     return_val = None
     index = 0
     for row in csv_reader:
-        if row[csv_layout.index('card_num')] == str(card_num):
+        if row[csv_layout.index('card_num')] == card_num:
             for item in csv_layout:
                 card_dict[item] = row[csv_layout.index(item)]
             card_dict['row_num'] = index
@@ -105,7 +105,7 @@ def remove_card(csv_data, card_num):
 
     #write all rows except the one that needs to be deleted
     for row in csv_list:
-        if str(card_num) not in row:
+        if card_num not in row:
             csv_writer.writerow(row)
 
         else:
@@ -135,7 +135,7 @@ def change_card(csv_data, card_num, card_dict):
 
     else:
         for row in csv_list:
-            if str(card_num) == row[csv_layout.index('card_num')]:
+            if card_num == row[csv_layout.index('card_num')]:
                 for item in csv_layout:
                     row[csv_layout.index(item)] = card_dict[item]
                 return_val = 0

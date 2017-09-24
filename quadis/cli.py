@@ -17,7 +17,7 @@ def set_date():
 
 @click.group()
 @click.argument('csv_file')
-@click.option('-n', '--card-num', type=click.INT,
+@click.option('-n', '--card-num',
               help='the card you want to check/add/change')
 @pass_config
 def cli(config, csv_file, card_num):
@@ -28,7 +28,7 @@ def cli(config, csv_file, card_num):
     if card_num is None:  #if card_num is none that means there was no
                           #user input
         config['card_num'] = click.prompt(
-            'Please scan card or enter number manually', type=int)
+            'Please scan card or enter number manually', type=str)
     else:
         config['card_num'] = card_num
 
@@ -109,7 +109,7 @@ def change_card(config):
     if card_info is not 1:
         if click.confirm('change number?'):
             card_info['card_num'] = click.prompt(
-                'please enter the new card number', type=int)
+                'please enter the new card number', type=str)
 
         if click.confirm('change name?'):
             card_info['name'] = click.prompt('please enter the new name', type=str)
