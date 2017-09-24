@@ -2,13 +2,11 @@
 import csv
 from datetime import datetime
 
-#these are constants for in what collums in the csv file different
-#information is located
-CARD_NUM_COLUMN = 0
-NAME_COLUMN = 1
-LAST_USED_COLUMN = 2
+csv_layout = ['card_num', 'name','under_13', 'under_18', 'under_60',
+              'over_59', 'zip', 'last_used_date']
 
 date_today = datetime.now()
+
 
 def check_date(date_str):
     '''used to make sure the given string is in the correct format'''
@@ -21,57 +19,49 @@ def check_date(date_str):
     return return_val
 
 
-def card_info(csv_file, card_num):
-    csv_file = open(csv_file)
+def card_info(csv_data, card_num):
+    csv_file = open(csv_data)
     csv_reader = csv.reader(csv_file, delimiter=',')
+    card_dict = dict()
     return_val = None
-
+    index = 0
     for row in csv_reader:
-        if row[CARD_NUM_COLUMN] == str(card_num):
-            return_val = row
-            continue
+        index += 1
+        if row[csv_layout.index('card_num')] == str(card_num):
+            for item in csv_layout:
+                card_dict[item] = row[csv_layout.index(item)]
+            card_dict['row_num'] = index
+            return_val = card_dict
+            break
         else:
             return_val = 1
 
     return return_val
 
-def check_card(csv_data, card_num, return_row=False, update_card=True):
+def check_card(csv_data, card_num, update_card=True):
     '''check a card to make sure it is on the csv file and has not been
     used today (also has statements and return_row which makes this
     return the row number of the card'''
-    card_found = False
-    row_num = 0  # when and if the card number is found,
-                 # the row number it's on will be stored here
     csv_file = open(csv_data)
     csv_list = list(csv.reader(csv_file, delimiter=','))  # To allow editing
     csv_file.close()  # So the csv file can be opened in write mode
     csv_file = open(csv_data, 'w')
     csv_writer = csv.writer(csv_file, delimiter=',')
 
-    return_val = None  # if return_row is True this the row of the card will
-                       # be returned (or 0 if not found) if False the
-                       # following will be returned:
-                       # 0 = card not found
+    return_val = None  # 0 = card not found
                        # 1 = card found and has not been used today
                        # 2 = card used today
-    last_used_date = ''
+    card_dict = card_info(csv_data, card_num)
 
-    for row in csv_list:  # scan CSV file for card number
-        if row[0] == str(card_num):
-            last_used_date = row[LAST_USED_COLUMN]
-            card_found = True
-            row_num = csv_list.index(row)
-
-    if card_found:
-        if return_row:
-            return_val = row_num
-
-        elif last_used_date == date_today.strftime('%m/%d/%Y'):
+    if card_dict is not 1:
+        if card_dict['last_used_date'] == date_today.strftime('%m/%d/%Y'):
             return_val = 2  #card used today
 
         else:
             if update_card:
-                csv_list[row_num][LAST_USED_COLUMN] = date_today.strftime('%m/%d/%Y')
+                csv_list[card_dict['row_num']]\
+                [csv_layout.index('last_used_date')] =\
+                date_today.strftime('%m/%d/%Y')
             return_val = 1  #card found and not used today
     else:
         return_val = 0  #card not found
@@ -80,26 +70,24 @@ def check_card(csv_data, card_num, return_row=False, update_card=True):
     csv_file.close()
     return return_val
 
-def add_card(csv_file, card_num, name, last_used_date, row_num):
+def add_card(csv_data, card_dict):
     '''adds a new card to the CSV file'''
-    row_num = check_card(csv_file, card_num, return_row=True)
-    csv_file = open(csv_file, 'a')
+    csv_file = open(csv_data, 'a')
     csv_writer = csv.writer(csv_file, delimiter=',')
-    row_list = [0, 0, 0]
+    row_list = list()
     return_val = None  #0: success
                        #1: card exists
                        #2: invalid date format
 
-    if row_num is not 0:  #don't modify the CSV file if the card exists
+    if card_info(csv_data, card_dict['card_num']) != 1:  #if card exists
         csv_file.close()
         return_val = 1
 
     else:
-        row_list[CARD_NUM_COLUMN] = card_num
-        row_list[NAME_COLUMN] = name
-        row_list[LAST_USED_COLUMN] = last_used_date
+        for item in csv_layout:
+            row_list.append(card_dict[item])
 
-        if last_used_date is 'N/A' or check_date(last_used_date) is 0:
+        if card_dict['last_used_date'] is 'N/A' or check_date(card_dict['last_used_date']) is 0:
             csv_writer.writerow(row_list)
             return_val = 0
         else:
@@ -126,35 +114,34 @@ def remove_card(csv_data, card_num):
     csv_file.close()
     return return_val
 
-def change_card(csv_data, card_num, new_card_num, name, last_used_date):
+def change_card(csv_data, card_num, card_dict):
     '''change the information connected a given card number (including the card number)'''
     csv_file = open(csv_data)
     csv_list = list(csv.reader(csv_file, delimiter=','))
     csv_file.close()  # So the csv file can be opened in write mode
     csv_file = open(csv_data, 'w')
     csv_writer = csv.writer(csv_file, delimiter=',')
+
+
     return_val = None  # 0: success
                        # 1: card not found
                        # 2: the new card number already exists
                        # 3: invalid date
 
-    if all([new_card_num is not card_num,
-            check_card(csv_data, new_card_num) is not 0]):
+    if all([card_dict['card_num'] is not card_num,
+            check_card(csv_data, card_dict['card_num']) is not 0]):
         return_val = 2
 
-    elif check_date(last_used_date) is 1:
+    elif check_date(card_dict['last_used_date']) is 1:
         return_val = 3
 
     else:
         for row in csv_list:
-            print(row[0])
-            if str(card_num) == row[CARD_NUM_COLUMN]:
-                index = csv_list.index(row)
-                csv_list[index][CARD_NUM_COLUMN] = new_card_num
-                csv_list[index][NAME_COLUMN] = name
-                csv_list[index][LAST_USED_COLUMN] = last_used_date
+            if str(card_num) == row[csv_layout.index(card_num)]:
+                for item in csv_layout:
+                    row[csv_layout.index(item)] = card_dict[item]
                 return_val = 0
-                continue
+                break
 
             else:
                 return_val = 1

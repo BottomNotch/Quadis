@@ -56,26 +56,37 @@ def check_card(config):
               help='if the card has been used today')
 @pass_config
 def add_card(config, name, used_today):
-    row_num = main.check_card(config['csv_file'], config['card_num'],
-                              return_row=True)
-    last_used_date = 'N/A'
+    card_dict = {'card_num':config['card_num'], 'last_used_date':'N/A', 'name':name}
 
-    if row_num is not 0:
-        click.echo('a card with the number {0} already exists on row {1}'.format(
-            config['card_num'], row_num))
+    if name is None:
+        card_dict['name'] = click.prompt('please enter a name', type=str)
+
+    if used_today or click.confirm('used today?'):
+        card_dict['last_used_date'] = main.date_today.strftime('%m/%d/%Y')
 
     else:
-        if name is None:
-            name = click.prompt('please enter a name', type=str)
+        if click.confirm('set date?'):
+            card_dict['last_used_date'] = set_date()
 
-        if used_today or click.confirm('used today?'):
-            last_used_date = main.date_today.strftime('%m/%d/%Y')
+    for item in main.csv_layout:
+        if all([item is not 'last_used_date', item is not 'name', item is not 'card_num']):
+            card_dict[item] = click.prompt(
+                'to what would you like to set {0} for this card?'
+                .format(item), type=str)
 
-        else:
-            if click.confirm('set date?'):
-                last_used_date = set_date()
-            main.add_card(config['csv_file'], config['card_num'], name,
-                          last_used_date, row_num)
+    result = main.add_card(config['csv_file'], card_dict)
+
+    card_dict_new = main.card_info(config['csv_file'], config['card_num'])
+
+    if result is 0:
+        click.echo('card number {0} successfully added on row {1}'
+                   .format(config['card_num'], card_dict_new['row_num']))
+    if result is 1:
+        click.echo('card number {0} already exists on row {1}'
+                   .format(config['card_num'], card_dict_new['row_num']))
+    if result is 2:
+        click.echo('{0} is not a valid date format'
+                   .format(card_dict['last_used_date']))
 
 @cli.command()
 @pass_config
@@ -94,25 +105,23 @@ def remove_card(config):
 def change_card(config):
     result = None
     card_info = main.card_info(config['csv_file'], config['card_num'])
-    
-    if card_info is not 0:
+
+    if card_info is not 1:
         if click.confirm('change number?'):
-            card_info[main.CARD_NUM_COLUMN] = click.prompt(
+            card_info['card_num'] = click.prompt(
                 'please enter the new card number', type=int)
 
         if click.confirm('change name?'):
-            card_info[main.NAME_COLUMN] = click.prompt('please enter the new name', type=str)
+            card_info['name'] = click.prompt('please enter the new name', type=str)
 
         if click.confirm('change last used date?'):
             if click.confirm('change to today?'):
-                card_info[main.LAST_USED_COLUMN] = main.date_today.strftime('%m/%d/%Y')
+                card_info['last_used_date'] = main.date_today.strftime('%m/%d/%Y')
             else:
-                card_info[main.LAST_USED_COLUMN] = set_date()
+                card_info['last_used_date'] = set_date()
 
         result = main.change_card(config['csv_file'], config['card_num'],
-                                  card_info[main.CARD_NUM_COLUMN],
-                                  card_info[main.NAME_COLUMN],
-                                  card_info[main.LAST_USED_COLUMN])
+                                  card_info)
 
         if result is 0:
             click.echo('card information changed successfully')
@@ -121,7 +130,7 @@ def change_card(config):
                        .format(config['card_num']))
         elif result is 2:
             click.echo('card number {0} already exists'
-                       .format(card_info[main.CARD_NUM_COLUMN]))
+                       .format(card_info['card_num']))
         elif result is 3:
             click.echo('{0} is an invalid date'
-                       .format(card_info[main.LAST_USED_COLUMN]))
+                       .format(card_info['last_used_date']))
