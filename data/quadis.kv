@@ -1,0 +1,36 @@
+<FileSelectionScreen>:
+  failure_message: failure_message
+  BoxLayout:
+    id: vert_layout
+    orientation: 'vertical'
+
+    Label:
+      size_hint: 1, 0.1
+      text: 'please enter the path of the csv file below'
+
+    BoxLayout:
+      size_hint: 1, 0.4
+      orientation: 'horizontal'
+      TextInput:
+        id: file_path_input
+        font_size: 20
+        size_hint: 0.8, (None)
+        height: self.line_height * 1.5
+        pos_hint: {'x': 0, 'top': 1}
+        multiline: False
+
+      Button:
+        size_hint: 0.2, (None)
+        height: file_path_input.height
+        pos_hint: {'x': 1, 'top' : 1}
+        text: 'confirm'
+        on_press: root.enter_text(file_path_input.text)
+
+    Label:
+      id: failure_message
+      size_hint: (None), 0.5
+      pos_hint: {'center_x': 0.5, 'top': 0.8}
+      size: self.texture_size
+      valign: 'top'
+      halign: 'center'
+      text: ''

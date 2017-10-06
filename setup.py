@@ -38,6 +38,7 @@ setup(
     entry_points={
         'console_scripts':[
             'quadis=quadis.cli:cli',
+            'quadis-gui=quadis.gui:gui',
             ],
         },
     include_package_data=True,
