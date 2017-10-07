@@ -8,6 +8,7 @@
 <FileSelectionScreen>:
   failure_message: failure_message
   file_path_input: file_path_input
+  on_enter: file_path_input.focus = True
 
   BoxLayout:
     id: vert_layout
@@ -25,6 +26,7 @@
         id: file_path_input
         size_hint: 0.8, (None)
         hint_text: 'example: /home/username/myfile.csv'
+        text: '/home/username/quadis2.csv'
         focus: True
         on_text_validate: root.enter_text(self.text)
 
@@ -51,6 +53,19 @@
   add_card_button: add_card_button
   remove_card_button: remove_card_button
   card_check_results: card_check_results
+  card_num_label: card_num_label
+  name_label: name_label
+  under_13_label: under_13_label
+  under_18_label: under_18_label
+  under_60_label: under_60_label
+  over_59_label: over_59_label
+  zip_code_label: zip_code_label
+  last_used_label: last_used_label
+
+  on_enter:
+    card_number_input.focus = True
+    card_number_input.text = ''
+    card_check_results.text = ''
 
   BoxLayout:
     orientation: 'vertical'
@@ -59,7 +74,7 @@
       id: file_name
       size_hint: 1, 0.1
       text: 'N/A'
-      markup: True
+      bold: True
 
     Label:
       size_hint: 1, 0.1
@@ -73,8 +88,61 @@
     Label:
       id: card_check_results
       size_hint: 1, 0.8
+      font_size: 25
+      bold: True
       text: ''
+
+    Label:
+      id: card_num_label
+      size_hint: 1, 0.1
+      text: ''
+      markup: True
+
+    Label:
+      id: name_label
+      size_hint: 1, 0.1
+      text: ''
+      markup: True
       
+    Label:
+      id: under_13_label
+      size_hint: 1, 0.1
+      text: ''
+      markup: True
+
+    Label:
+      id: under_18_label
+      size_hint: 1, 0.1
+      text: ''
+      markup: True
+
+    Label:
+      id: under_60_label
+      size_hint: 1, 0.1
+      text: ''
+      markup: True
+
+    Label:
+      id: over_59_label
+      size_hint: 1, 0.1
+      text: ''
+      markup: True
+      
+    Label:
+      id: zip_code_label
+      size_hint: 1, 0.1
+      text: ''
+      markup: True
+
+    Label:
+      id: last_used_label
+      size_hint: 1, 0.1
+      text: ''
+      markup: True
+
+
+
+
     BoxLayout:
       Button:
         id: checkin_card_button
@@ -105,4 +173,6 @@
         size_hint: 0.2, 0.1
         pos_hint: {'center_x': 0.5}
         text: 'choose a different file'
-        on_press: root.manager.current = 'Select File'
+        on_press:
+          root.manager.transition.direction = 'right'
+          root.manager.current = 'Select File'
