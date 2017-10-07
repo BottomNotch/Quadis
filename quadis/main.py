@@ -23,7 +23,6 @@ def card_info(csv_data, card_num):
     csv_file = open(csv_data)
     csv_reader = csv.reader(csv_file, delimiter=',')
     card_dict = dict()
-    return_val = None
     index = 0
     for row in csv_reader:
         if row[csv_layout.index('card_num')] == card_num:
@@ -31,9 +30,6 @@ def card_info(csv_data, card_num):
                 card_dict[item] = row[csv_layout.index(item)]
             card_dict['row_num'] = index
             return card_dict
-            break
-        else:
-            return_val = 1
         index += 1
     return 1
 
@@ -44,13 +40,13 @@ def check_card(csv_data, card_num, update_card=True):
     csv_file = open(csv_data)
     csv_list = list(csv.reader(csv_file, delimiter=','))  # To allow editing
     csv_file.close()  # So the csv file can be opened in write mode
+    card_dict = card_info(csv_data, card_num)
     csv_file = open(csv_data, 'w')
     csv_writer = csv.writer(csv_file, delimiter=',')
 
     return_val = None  # 0 = card not found
                        # 1 = card found and has not been used today
                        # 2 = card used today
-    card_dict = card_info(csv_data, card_num)
 
     if card_dict is not 1:
         if card_dict['last_used_date'] == date_today.strftime('%m/%d/%Y'):
