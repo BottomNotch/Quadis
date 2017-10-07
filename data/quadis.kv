@@ -46,6 +46,7 @@
 
 <CardCheckingScreen>:
   file_name: file_name
+  checkin_card_button: checkin_card_button
   mod_card_button: mod_card_button
   add_card_button: add_card_button
   remove_card_button: remove_card_button
@@ -67,7 +68,7 @@
     QuadisTextInput:
       size_hint: 1, (None)
       id: card_number_input
-      on_text_validate: root.check_card(self.text)
+      on_text_validate: root.check_card(self.text, False)
 
     Label:
       id: card_check_results
@@ -75,6 +76,13 @@
       text: 'testing'
       
     BoxLayout:
+      Button:
+        id: checkin_card_button
+        size_hint: 0.2, 0.1
+        disabled: True
+        text: 'check card in for today'
+        on_press: root.check_card(card_number_input.text, True)
+    
       Button:
         id: mod_card_button
         size_hint: 0.2, 0.1

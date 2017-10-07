@@ -31,34 +31,39 @@ class FileSelectionScreen(Screen):
                 self.failure_message.text = 'invalid file format'
 
 class CardCheckingScreen(Screen):
-    def disable_buttons(self, mod_card, add_card, remove_card):
+    def disable_buttons(self, checkin_card, mod_card, add_card, remove_card):
+        self.checkin_card_button.disabled = checkin_card
         self.mod_card_button.disabled = mod_card
         self.add_card_button.disabled = add_card
         self.remove_card_button.disabled = remove_card
         
-    def check_card(self, card_num):
-        result = main.check_card(self.file_name.text, card_num, update_card=False)
+    def check_card(self, card_num, update_card):
+        result = main.check_card(self.file_name.text, card_num, update_card=update_card)
 
         if result is 0:
             self.card_check_results.text = 'card not found'
-            self.disable_buttons(True, False, True)
+            self.disable_buttons(True, True, False, True)
 
         elif result is 1:
-            self.card_check_results.text = 'card found and has not been used today'
-            self.disable_buttons(False, True, False)
+            if update_card is False:
+                self.card_check_results.text = 'card found and has not been used today'
+                self.disable_buttons(False, False, True, False)
+            else:
+                self.card_check_results.text = 'card checked in'
+                self.disable_buttons(True, False, True, False)
 
         elif result is 2:
             self.card_check_results.text = 'card found and has been used today'
-            self.disable_buttons(False, True, False)
+            self.disable_buttons(True, False, True, False)
 
         else:
             self.card_check_results.text = 'unknown error'
-            self.disable_buttons(True, True, True)
+            self.disable_buttons(True, True, True, True)
 
 sm = ScreenManager()
 sm.add_widget(FileSelectionScreen(name='Select File'))
 sm.add_widget(CardCheckingScreen(name='Scan Card'))
-#sm.current = 'Scan Card'
+sm.current = 'Scan Card'
 
 class QuadisApp(App):
 
