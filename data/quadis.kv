@@ -1,3 +1,10 @@
+<QuadisTextInput@TextInput>:
+  font_size: 20
+  size_hint: (None), (None)
+  height: self.line_height * 1.5
+  pos_hint: {'x': 0, 'top': 1}
+  multiline: False
+
 <FileSelectionScreen>:
   failure_message: failure_message
   file_path_input: file_path_input
@@ -13,16 +20,13 @@
     BoxLayout:
       size_hint: 1, 0.4
       orientation: 'horizontal'
-      TextInput:
+      
+      QuadisTextInput:  
         id: file_path_input
-        font_size: 20
         size_hint: 0.8, (None)
-        height: self.line_height * 1.5
-        pos_hint: {'x': 0, 'top': 1}
-        multiline: False
         hint_text: 'example: /home/username/myfile.csv'
-        on_text_validate: root.enter_text(self.text)
         focus: True
+        on_text_validate: root.enter_text(self.text)
 
       Button:
         size_hint: 0.2, (None)
@@ -39,3 +43,58 @@
       valign: 'top'
       halign: 'center'
       text: ''
+
+<CardCheckingScreen>:
+  file_name: file_name
+  mod_card_button: mod_card_button
+  add_card_button: add_card_button
+  remove_card_button: remove_card_button
+  card_check_results: card_check_results
+
+  BoxLayout:
+    orientation: 'vertical'
+
+    Label:
+      id: file_name
+      size_hint: 1, 0.1
+      text: 'N/A'
+      markup: True
+
+    Label:
+      size_hint: 1, 0.1
+      text: 'please scan a card or manually enter a card number'
+
+    QuadisTextInput:
+      size_hint: 1, (None)
+      id: card_number_input
+      on_text_validate: root.check_card(self.text)
+
+    Label:
+      id: card_check_results
+      size_hint: 1, 0.8
+      text: 'testing'
+      
+    BoxLayout:
+      Button:
+        id: mod_card_button
+        size_hint: 0.2, 0.1
+        disabled: True
+        text: 'modify card'
+
+      Button:
+        id: add_card_button
+        size_hint: 0.2, 0.1
+        disabled: True
+        text: 'add card'
+
+      Button:
+        id: remove_card_button
+        size_hint: 0.2, 0.1
+        disabled: True
+        text: 'remove card'
+
+      Button:
+        size_hint: 0.2, 0.1
+        pos_hint: {'center_x': 0.5}
+        text: 'choose a different file'
+        on_press: root.manager.current = 'Select File'
