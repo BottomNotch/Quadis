@@ -63,7 +63,6 @@ class CardCheckingScreen(Screen):
 sm = ScreenManager()
 sm.add_widget(FileSelectionScreen(name='Select File'))
 sm.add_widget(CardCheckingScreen(name='Scan Card'))
-sm.current = 'Scan Card'
 
 class QuadisApp(App):
 
