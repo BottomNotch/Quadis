@@ -42,9 +42,6 @@
 		text: 'ok'
 
 <FileSelectionScreen>:
-	failure_message: failure_message
-	file_path_input: file_path_input
-	on_enter: file_path_input.focus = True
 
 	BoxLayout:
 		id: vert_layout
@@ -53,37 +50,13 @@
 		Label:
 			size_hint: 1, 0.1
 			font_size: 20
-			text: 'please enter the path of the csv file below'
+			text: 'please select a csv file below'
 
-		BoxLayout:
-			size_hint: 1, 0.4
-			orientation: 'horizontal'
-			
-			QuadisTextInput:	
-				id: file_path_input
-				font_size: 20
-				size_hint: 0.8, (None)
-				hint_text: 'example: /home/username/myfile.csv'
-				text: '/home/username/quadis2.csv'
-				focus: True
-				on_text_validate: root.enter_text(self.text)
-
-			Button:
-				size_hint: 0.2, (None)
-				height: file_path_input.height
-				pos_hint: {'x': 1, 'top' : 1}
-				font_size: 20
-				text: 'confirm'
-				on_press: root.enter_text(file_path_input.text)
-
-		Label:
-			id: failure_message
-			size_hint: (None), 0.5
-			pos_hint: {'center_x': 0.5, 'top': 0.8}
-			size: self.texture_size
-			valign: 'top'
-			halign: 'center'
-			text: ''
+		FileChooserIconView:
+			path: root.set_path()
+			on_submit: root.select_file(self.selection[0])
+			id: filechooser
+			filters: ['*.csv']
 
 <CardCheckingScreen>:
 	file_name: file_name

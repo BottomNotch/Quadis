@@ -23,21 +23,13 @@ class OkPopup(RelativeLayout):
     pass
 
 class FileSelectionScreen(Screen):
-    def enter_text(self, file_path):
-        if path.isfile(file_path) and file_path.endswith('.csv'):
-            self.manager.transition.direction = 'left'
-            self.manager.current = 'Scan Card'
-            self.manager.get_screen('Scan Card').file_name.text = file_path
+    def set_path(self):
+        return path.expanduser('~')
 
-        else:
-            Clock.schedule_once(lambda dt:
-                                setattr(self.file_path_input, 'focus', True), 0)
-            self.file_path_input.text = ''
-
-            if not path.isfile(file_path):
-                self.failure_message.text = 'file doesn\'t exist'
-            else:
-                self.failure_message.text = 'invalid file format'
+    def select_file(self, file_path):
+        self.manager.transition.direction = 'left'
+        self.manager.current = 'Scan Card'
+        self.manager.get_screen('Scan Card').file_name.text = file_path
 
 class CardCheckingScreen(Screen):
     def disable_buttons(self, checkin_card, mod_card, add_card, remove_card):
