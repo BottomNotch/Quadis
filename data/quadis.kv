@@ -1,178 +1,412 @@
 <QuadisTextInput@TextInput>:
-  font_size: 20
-  size_hint: (None), (None)
-  height: self.line_height * 1.5
-  pos_hint: {'x': 0, 'top': 1}
-  multiline: False
+	size_hint: (None), (None)
+	height: self.line_height * 1.6
+	pos_hint: {'x': 0, 'top': 1}
+	multiline: False
+
+<ConfirmationPopup@RelativeLayout>:
+	dialog: dialog
+	yes: yes
+	no: no
+
+	Label:
+		id: dialog
+		pos_hint: {'center_x': 0.5, 'y': 0.3}
+		size: self.texture_size
+		font_size: 15
+		text: ''
+
+	BoxLayout:
+		size_hint: 1, 0.35
+		pos_hint: {'center_x': 0.5, 'y': 0}
+		Button:
+			id: yes
+			text: 'yes'
+		Button:
+			id: no
+			text: 'no'
+
+<OkPopup@RelativeLayout>:
+	dialog: dialog
+	ok: ok
+	Label:
+		id: dialog
+		pos_hint: {'center_x': 0.5, 'y': 0.3}
+		size: self.texture_size
+		font_size: 15
+		text: ''
+
+	Button:
+		id: ok
+		size_hint: 1, 0.35
+		text: 'ok'
 
 <FileSelectionScreen>:
-  failure_message: failure_message
-  file_path_input: file_path_input
-  on_enter: file_path_input.focus = True
+	failure_message: failure_message
+	file_path_input: file_path_input
+	on_enter: file_path_input.focus = True
 
-  BoxLayout:
-    id: vert_layout
-    orientation: 'vertical'
+	BoxLayout:
+		id: vert_layout
+		orientation: 'vertical'
 
-    Label:
-      size_hint: 1, 0.1
-      text: 'please enter the path of the csv file below'
+		Label:
+			size_hint: 1, 0.1
+			font_size: 20
+			text: 'please enter the path of the csv file below'
 
-    BoxLayout:
-      size_hint: 1, 0.4
-      orientation: 'horizontal'
-      
-      QuadisTextInput:  
-        id: file_path_input
-        size_hint: 0.8, (None)
-        hint_text: 'example: /home/username/myfile.csv'
-        text: '/home/username/quadis2.csv'
-        focus: True
-        on_text_validate: root.enter_text(self.text)
+		BoxLayout:
+			size_hint: 1, 0.4
+			orientation: 'horizontal'
+			
+			QuadisTextInput:	
+				id: file_path_input
+				font_size: 20
+				size_hint: 0.8, (None)
+				hint_text: 'example: /home/username/myfile.csv'
+				text: '/home/username/quadis2.csv'
+				focus: True
+				on_text_validate: root.enter_text(self.text)
 
-      Button:
-        size_hint: 0.2, (None)
-        height: file_path_input.height
-        pos_hint: {'x': 1, 'top' : 1}
-        text: 'confirm'
-        on_press: root.enter_text(file_path_input.text)
+			Button:
+				size_hint: 0.2, (None)
+				height: file_path_input.height
+				pos_hint: {'x': 1, 'top' : 1}
+				font_size: 20
+				text: 'confirm'
+				on_press: root.enter_text(file_path_input.text)
 
-    Label:
-      id: failure_message
-      size_hint: (None), 0.5
-      pos_hint: {'center_x': 0.5, 'top': 0.8}
-      size: self.texture_size
-      valign: 'top'
-      halign: 'center'
-      text: ''
+		Label:
+			id: failure_message
+			size_hint: (None), 0.5
+			pos_hint: {'center_x': 0.5, 'top': 0.8}
+			size: self.texture_size
+			valign: 'top'
+			halign: 'center'
+			text: ''
 
 <CardCheckingScreen>:
-  file_name: file_name
-  checkin_card_button: checkin_card_button
-  mod_card_button: mod_card_button
-  add_card_button: add_card_button
-  remove_card_button: remove_card_button
-  card_check_results: card_check_results
-  card_num_label: card_num_label
-  name_label: name_label
-  under_13_label: under_13_label
-  under_18_label: under_18_label
-  under_60_label: under_60_label
-  over_59_label: over_59_label
-  zip_code_label: zip_code_label
-  last_used_label: last_used_label
+	file_name: file_name
+	checkin_card_button: checkin_card_button
+	mod_card_button: mod_card_button
+	add_card_button: add_card_button
+	remove_card_button: remove_card_button
+	card_check_results: card_check_results
+	card_num_label: card_num_label
+	card_num_input: card_num_input
+	name_label: name_label
+	under_13_label: under_13_label
+	under_18_label: under_18_label
+	under_60_label: under_60_label
+	over_59_label: over_59_label
+	zip_code_label: zip_code_label
+	last_used_label: last_used_label
 
-  on_enter:
-    card_number_input.focus = True
-    card_number_input.text = ''
-    card_check_results.text = ''
+	on_enter:
+		card_num_input.focus = True
+		card_num_input.text = ''
+		card_check_results.text = ''
 
-  BoxLayout:
-    orientation: 'vertical'
+	BoxLayout:
+		orientation: 'vertical'
 
-    Label:
-      id: file_name
-      size_hint: 1, 0.1
-      text: 'N/A'
-      bold: True
+		Label:
+			id: file_name
+			size_hint: 1, 0.1
+			font_size: 25
+			text: 'N/A'
+			bold: True
 
-    Label:
-      size_hint: 1, 0.1
-      text: 'please scan a card or manually enter a card number'
+		Label:
+			size_hint: 1, 0.1
+			font_size: 20
+			text: 'please scan a card or manually enter a card number'
 
-    QuadisTextInput:
-      size_hint: 1, (None)
-      id: card_number_input
-      on_text_validate: root.check_card(self.text, False)
+		QuadisTextInput:
+			font_size: 20
+			size_hint: 1, (None)
+			id: card_num_input
+			on_text_validate: root.check_card(self.text, False)
 
-    Label:
-      id: card_check_results
-      size_hint: 1, 0.8
-      font_size: 25
-      bold: True
-      text: ''
+		Label:
+			id: card_check_results
+			size_hint: 1, 0.8
+			font_size: 25
+			bold: True
+			text: ''
 
-    Label:
-      id: card_num_label
-      size_hint: 1, 0.1
-      text: ''
-      markup: True
+		Label:
+			id: card_num_label
+			size_hint: 1, 0.1
+			font_size: 20
+			text: ''
+			markup: True
 
-    Label:
-      id: name_label
-      size_hint: 1, 0.1
-      text: ''
-      markup: True
-      
-    Label:
-      id: under_13_label
-      size_hint: 1, 0.1
-      text: ''
-      markup: True
+		Label:
+			id: name_label
+			size_hint: 1, 0.1
+			font_size: 20
+			text: ''
+			markup: True
+			
+		Label:
+			id: under_13_label
+			size_hint: 1, 0.1
+			font_size: 20
+			text: ''
+			markup: True
 
-    Label:
-      id: under_18_label
-      size_hint: 1, 0.1
-      text: ''
-      markup: True
+		Label:
+			id: under_18_label
+			size_hint: 1, 0.1
+			font_size: 20
+			text: ''
+			markup: True
 
-    Label:
-      id: under_60_label
-      size_hint: 1, 0.1
-      text: ''
-      markup: True
+		Label:
+			id: under_60_label
+			size_hint: 1, 0.1
+			font_size: 20
+			text: ''
+			markup: True
 
-    Label:
-      id: over_59_label
-      size_hint: 1, 0.1
-      text: ''
-      markup: True
-      
-    Label:
-      id: zip_code_label
-      size_hint: 1, 0.1
-      text: ''
-      markup: True
+		Label:
+			id: over_59_label
+			size_hint: 1, 0.1
+			font_size: 20
+			text: ''
+			markup: True
+			
+		Label:
+			id: zip_code_label
+			size_hint: 1, 0.1
+			font_size: 20
+			text: ''
+			markup: True
 
-    Label:
-      id: last_used_label
-      size_hint: 1, 0.1
-      text: ''
-      markup: True
+		Label:
+			id: last_used_label
+			size_hint: 1, 0.1
+			font_size: 20
+			text: ''
+			markup: True
 
+		BoxLayout:
+			Button:
+				id: checkin_card_button
+				size_hint: 0.5, 0.1
+				disabled: True
+				font_size: 20
+				text: 'check card in for today'
+				on_press: root.check_card(card_num_input.text, True)
+		
+			Button:
+				id: mod_card_button
+				size_hint: 0.5, 0.1
+				disabled: True
+				font_size: 20
+				text: 'modify card'
+				on_press: root.change_card_screen()
 
+			Button:
+				id: add_card_button
+				size_hint: 0.5, 0.1
+				disabled: True
+				font_size: 20
+				text: 'add card'
+				on_press: root.add_card_screen()
 
+			Button:
+				id: remove_card_button
+				size_hint: 0.5, 0.1
+				disabled: True
+				font_size: 20
+				text: 'remove card'
 
-    BoxLayout:
-      Button:
-        id: checkin_card_button
-        size_hint: 0.2, 0.1
-        disabled: True
-        text: 'check card in for today'
-        on_press: root.check_card(card_number_input.text, True)
-    
-      Button:
-        id: mod_card_button
-        size_hint: 0.2, 0.1
-        disabled: True
-        text: 'modify card'
+			Button:
+				size_hint: 0.5, 0.1
+				pos_hint: {'center_x': 0.5}
+				font_size: 20
+				text: 'choose a different file'
+				on_press:
+					root.manager.transition.direction = 'right'
+					root.manager.current = 'Select File'
 
-      Button:
-        id: add_card_button
-        size_hint: 0.2, 0.1
-        disabled: True
-        text: 'add card'
+<CardAddAndModScreen>:
+	file_name: file_name
+	card_num_label: card_num_label
+	name_label: name_label
+	under_13_label: under_13_label
+	under_18_label: under_18_label
+	under_60_label: under_60_label
+	over_59_label: over_59_label
+	zip_code_label: zip_code_label
+	last_used_label: last_used_label
+	card_num_input: card_num_input
+	name_input: name_input
+	under_13_input: under_13_input
+	under_18_input: under_18_input
+	under_60_input: under_60_input
+	over_59_input: over_59_input
+	zip_code_input: zip_code_input
+	last_used_input: last_used_input
+	
+	BoxLayout:
+		orientation: 'vertical'
 
-      Button:
-        id: remove_card_button
-        size_hint: 0.2, 0.1
-        disabled: True
-        text: 'remove card'
+		Label:
+			id: file_name
+			size_hint: 1, 0.3
+			text: 'N/A'
+			bold: True
 
-      Button:
-        size_hint: 0.2, 0.1
-        pos_hint: {'center_x': 0.5}
-        text: 'choose a different file'
-        on_press:
-          root.manager.transition.direction = 'right'
-          root.manager.current = 'Select File'
+		RelativeLayout:
+			Label:
+				id: card_num_label
+				size_hint: None, None
+				pos_hint: {'right': 0.4}
+				size: self.texture_size
+				font_size: 20
+				text: '[b]card number:[/b]'
+				markup: True
+
+			QuadisTextInput:
+				id: card_num_input
+				text_size: 10
+				pos_hint: {'x': 0.4, 'center_y': 0.1}
+				width: self.height * 9
+				on_text_validate: name_input.focus = True
+
+		RelativeLayout:
+			Label:
+				id: name_label
+				size_hint: None, None
+				pos_hint: {'right': 0.4}
+				size: self.texture_size
+				font_size: 20
+				text: '[b]name:[/b]'
+				markup: True
+
+			QuadisTextInput:
+				id: name_input
+				text_size: 10
+				pos_hint: {'x': 0.4, 'center_y': 0.1}
+				width: self.height * 9
+				on_text_validate: under_13_input.focus = True
+		 
+		RelativeLayout:
+			Label:
+				id: under_13_label
+				size_hint: None, None
+				pos_hint: {'right': 0.4}
+				size: self.texture_size
+				font_size: 20
+				text: '[b]children 12 and under:[/b]'
+				markup: True
+
+			QuadisTextInput:
+				id: under_13_input
+				text_size: 10
+				pos_hint: {'x': 0.4, 'center_y': 0.1}
+				width: self.height 
+				on_text_validate: under_18_input.focus = True
+				
+		RelativeLayout:
+			Label:
+				id: under_18_label
+				size_hint: None, None
+				pos_hint: {'right': 0.4}
+				size: self.texture_size
+				font_size: 20
+				text: '[b]children over the age of 12:[/b]'
+				markup: True
+
+			QuadisTextInput:
+				id: under_18_input
+				text_size: 10
+				pos_hint: {'x': 0.4, 'center_y': 0.1}
+				width: self.height
+				on_text_validate: under_60_input.focus = True
+
+		RelativeLayout:
+			Label:
+				id: under_60_label
+				size_hint: None, None
+				pos_hint: {'right': 0.4}
+				size: self.texture_size
+				font_size: 20
+				text: '[b]adults under the age of 60:[/b]'
+				markup: True
+
+			QuadisTextInput:
+				id: under_60_input
+				text_size: 10
+				pos_hint: {'x': 0.4, 'center_y': 0.1}
+				width: self.height
+				on_text_validate: over_59_input.focus = True
+
+		RelativeLayout:
+			Label:
+				id: over_59_label
+				size_hint: None, None
+				pos_hint: {'right': 0.4}
+				size: self.texture_size
+				font_size: 20
+				text: '[b]adults age 60 and older:[/b]'
+				markup: True
+
+			QuadisTextInput:
+				id: over_59_input
+				text_size: 10
+				pos_hint: {'x': 0.4, 'center_y': 0.1}
+				width: self.height
+				on_text_validate: zip_code_input.focus = True
+				
+		RelativeLayout:
+			Label:
+				id: zip_code_label
+				size_hint: None, None
+				pos_hint: {'right': 0.4}
+				size: self.texture_size
+				font_size: 20
+				text: '[b]zip code:[/b]'
+				markup: True
+
+			QuadisTextInput:
+				id: zip_code_input
+				text_size: 10
+				pos_hint: {'x': 0.4, 'center_y': 0.1}
+				width: self.height * 1.8
+				on_text_validate: last_used_input.focus = True
+
+		RelativeLayout:
+			Label:
+				id: last_used_label
+				size_hint: None, None
+				pos_hint: {'right': 0.4}
+				size: self.texture_size
+				font_size: 20
+				text: '[b]card last used on:[/b]'
+				markup: True
+
+			QuadisTextInput:
+				id: last_used_input
+				text_size: 10
+				pos_hint: {'x': 0.4, 'center_y': 0.1}
+				width: self.height * 3.1
+				on_text_validate: root.confirm_popup(add_card=root.add_card_mode, change_card=root.change_card_mode)
+
+		RelativeLayout:
+			Button:
+				size_hint: 0.2, 0.3
+				pos_hint: {'right': 0.5}
+				font_size: 20
+				text: 'confirm'
+				on_press: root.confirm_popup(add_card=root.add_card_mode, change_card=root.change_card_mode)
+
+			Button:
+				size_hint: 0.2, 0.3
+				pos_hint: {'x': 0.5}
+				font_size: 20
+				text: 'cancel'
+				on_press: root.confirm_popup(cancel=True)
