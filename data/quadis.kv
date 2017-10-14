@@ -52,11 +52,11 @@
 			font_size: 20
 			text: 'please select a csv file below'
 
-		FileChooserIconView:
+		FileChooserListView:
 			path: root.set_path()
 			on_submit: root.select_file(self.selection[0])
-			id: filechooser
 			filters: ['*.csv']
+			text_size: 50
 
 <CardCheckingScreen>:
 	file_name: file_name

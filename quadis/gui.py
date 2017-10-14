@@ -10,6 +10,7 @@ from os import path
 from quadis import main
 
 Builder.load_file(path.dirname(path.abspath(__file__)) + '/../data/quadis.kv')
+Builder.load_file(path.dirname(path.abspath(__file__)) + '/../data/custom_file_chooser.kv')
 
 csv_path = None
 
