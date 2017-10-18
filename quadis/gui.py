@@ -7,6 +7,7 @@ from kivy.uix.popup import Popup
 from kivy.lang import Builder
 from kivy.clock import Clock
 from os import path
+from datetime import datetime
 from quadis import main
 
 Builder.load_file(path.dirname(path.abspath(__file__)) + '/../data/quadis.kv')
@@ -22,6 +23,29 @@ class ConfirmationPopup(RelativeLayout):
 
 class OkPopup(RelativeLayout):
     pass
+
+class SetDatePopup(RelativeLayout):
+    months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+    days = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13',
+            '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24',
+			'25', '26', '27', '28', '29', '30', '31']
+    years = ['2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024',
+             '2025', '2026', '2027']
+    screen = None
+
+    def disable_spinners(self, disable):
+        self.last_used_month.disabled = disable
+        self.last_used_day.disabled = disable
+        self.last_used_year.disabled = disable
+
+    def set_date(self, ignore):
+        if self.clear_date_button.state is 'down':
+            self.screen.last_used_string = 'N/A'
+
+        else:
+            self.screen.last_used_string = (self.last_used_month.text + '/' +
+                                            self.last_used_day.text + '/' +
+                                            self.last_used_year.text)
 
 class FileSelectionScreen(Screen):
     def set_path(self):
@@ -102,7 +126,8 @@ class CardCheckingScreen(Screen):
         s.file_name.text = self.file_name.text
         s.add_card_mode = True
         s.change_card_mode = False
-        s.name_input.foucs = True
+        s.name_input.focus = True
+        s.last_used_date = main.date_today;
 
         self.manager.transition.direction = 'down'
         self.manager.current = 'Add or Modify Card'
@@ -112,14 +137,19 @@ class CardCheckingScreen(Screen):
         s = self.manager.get_screen('Add or Modify Card')
         s.card_num_input.text = self.card_num_input.text
         s.card_num_input.disabled = False
+        s.card_num_input.focus = True
         s.name_input.text = card_dict['name']
         s.under_13_input.text = card_dict['under_13']
         s.under_18_input.text = card_dict['under_18']
         s.under_60_input.text = card_dict['under_60']
         s.over_59_input.text = card_dict['over_59']
         s.zip_code_input.text = card_dict['zip']
-        s.last_used_input.text = card_dict['last_used_date']
+        try:
+            s.last_used_date = datetime.strptime(card_dict['last_used_date'], '%m/%d/%Y')
+        except ValueError:
+            s.last_used_date = main.date_today
 
+        s.last_used_string = card_dict['last_used_date']
         s.file_name.text = self.file_name.text
         s.add_card_mode = False
         s.change_card_mode = True
@@ -133,6 +163,10 @@ class CardAddAndModScreen(Screen):
     add_card_mode = False
     change_card_mode = False
 
+    last_used_date = None
+    last_used_string = ''
+
+
     def card_dict_builder(self):
         card_dict = dict()
         card_dict['card_num'] = self.card_num_input.text
@@ -142,7 +176,10 @@ class CardAddAndModScreen(Screen):
         card_dict['under_60'] = self.under_60_input.text
         card_dict['over_59'] = self.over_59_input.text
         card_dict['zip'] = self.zip_code_input.text
-        card_dict['last_used_date'] = self.last_used_input.text
+        if self.used_today_button.state is 'down':
+            card_dict['last_used_date'] = main.date_today.strftime('%m/%d/%Y')
+        else:
+            card_dict['last_used_date'] = self.last_used_string
         return card_dict
 
     def add_card(self):
@@ -159,7 +196,7 @@ class CardAddAndModScreen(Screen):
         elif result is 2:
             title = 'failure'
             content.dialog.text = '{0} is not a valid date/date format'.format(
-                self.last_used_input.text)
+                self.last_used_string)
 
         else:
             title = 'failure'
@@ -195,7 +232,7 @@ class CardAddAndModScreen(Screen):
         elif result is 3:
             title = 'failure'
             content.dialog.text = '{0} is not a valid date/date format'.format(
-                self.last_used_input.text)
+                self.last_used_string)
 
         else:
             title = 'failure'
@@ -220,7 +257,8 @@ class CardAddAndModScreen(Screen):
         self.under_60_input.text = ''
         self.over_59_input.text = ''
         self.zip_code_input.text = ''
-        self.last_used_input.text = ''
+        self.used_today_button.state = 'normal'
+        self.set_date_button.disabled = False
 
         self._popup.dismiss()
         s = self.manager.get_screen('Scan Card')
@@ -252,6 +290,19 @@ class CardAddAndModScreen(Screen):
         self._popup.content.dialog.text = dialog_text
         self._popup.content.yes.on_press = on_press
         self._popup.content.no.on_press = self._popup.dismiss
+        self._popup.open()
+
+
+    def date_popup(self):
+        content = SetDatePopup()
+        content.screen=self
+        content.last_used_month.text = self.last_used_date.strftime('%m')
+        content.last_used_day.text = self.last_used_date.strftime('%m')
+        content.last_used_year.text = self.last_used_date.strftime('%Y')
+        self._popup = Popup(title='Set Date', content=content, size_hint=(0.45, 0.45))
+        self._popup.content.confirm.bind(on_press=self._popup.dismiss)
+        self._popup.content.confirm.bind(on_press=content.set_date)
+        self._popup.content.cancel.bind(on_press=self._popup.dismiss)
         self._popup.open()
 
 sm = ScreenManager()

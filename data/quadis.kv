@@ -13,7 +13,7 @@
 		id: dialog
 		pos_hint: {'center_x': 0.5, 'y': 0.3}
 		size: self.texture_size
-		font_size: 15
+		font_size: 20
 		text: ''
 
 	BoxLayout:
@@ -21,9 +21,11 @@
 		pos_hint: {'center_x': 0.5, 'y': 0}
 		Button:
 			id: yes
+			font_size: 20
 			text: 'yes'
 		Button:
 			id: no
+			font_size: 20
 			text: 'no'
 
 <OkPopup@RelativeLayout>:
@@ -33,13 +35,64 @@
 		id: dialog
 		pos_hint: {'center_x': 0.5, 'y': 0.3}
 		size: self.texture_size
-		font_size: 15
+		font_size: 20
 		text: ''
 
 	Button:
 		id: ok
 		size_hint: 1, 0.35
+		font_size: 20
 		text: 'ok'
+
+<SetDatePopup@RelativeLayout>
+	last_used_month: last_used_month
+	last_used_day: last_used_day
+	last_used_year: last_used_year
+	clear_date_button: clear_date_button
+	confirm: confirm
+	cancel: cancel
+
+	Spinner:
+		id: last_used_month
+		pos_hint: {'x': 0, 'top': 1}
+		size_hint: 0.25, 0.15
+		values: root.months
+				
+	Spinner:
+		id: last_used_day
+		pos_hint: {'x': 0.25, 'top': 1}
+		size_hint: 0.25, 0.15
+		values: root.days
+
+	Spinner:
+		id: last_used_year
+		pos_hint: {'x': 0.5, 'top': 1}
+		size_hint: 0.25, 0.15
+		values: root.years 
+
+	ToggleButton:
+		id: clear_date_button
+		pos_hint: {'x': 0.75, 'top': 1}
+		size_hint: 0.25, 0.15
+		font_size: 20
+		text: 'clear date'
+		on_press:
+			if self.state is 'down': root.disable_spinners(True)
+			else: root.disable_spinners(False)
+
+	Button:
+		id: confirm
+		size_hint: 0.2, 0.5
+		pos_hint: {'right': 0.5, 'y': 0}
+		font_size: 20
+		text: 'confirm'
+		
+	Button:
+		id: cancel
+		size_hint: 0.2, 0.5
+		pos_hint: {'x': 0.5, 'y': 0}
+		font_size: 20
+		text: 'cancel'
 
 <FileSelectionScreen>:
 
@@ -222,8 +275,9 @@
 	under_60_input: under_60_input
 	over_59_input: over_59_input
 	zip_code_input: zip_code_input
-	last_used_input: last_used_input
-	
+	used_today_button: used_today_button
+	set_date_button: set_date_button
+
 	BoxLayout:
 		orientation: 'vertical'
 
@@ -350,7 +404,6 @@
 				text_size: 10
 				pos_hint: {'x': 0.4, 'center_y': 0.1}
 				width: self.height * 1.8
-				on_text_validate: last_used_input.focus = True
 
 		RelativeLayout:
 			Label:
@@ -359,15 +412,28 @@
 				pos_hint: {'right': 0.4}
 				size: self.texture_size
 				font_size: 20
-				text: '[b]card last used on:[/b]'
+				text: '[b]card last used date:[/b]'
 				markup: True
 
-			QuadisTextInput:
-				id: last_used_input
-				text_size: 10
+			ToggleButton:
+				id: used_today_button
+				size_hint: 0.1, None
+				height: last_used_label.height
 				pos_hint: {'x': 0.4, 'center_y': 0.1}
-				width: self.height * 3.1
-				on_text_validate: root.confirm_popup(add_card=root.add_card_mode, change_card=root.change_card_mode)
+				font_size: 18
+				text: 'today'
+				on_press:
+					if self.state is 'down': set_date_button.disabled = True
+					elif self.state is 'normal': set_date_button.disabled = False
+
+			Button:
+				id: set_date_button
+				size_hint: 0.2, None
+				height: last_used_label.height
+				pos_hint: {'x': 0.5, 'center_y': 0.1}
+				font_size: 18
+				text: 'set date manually (advanced)'
+				on_press: root.date_popup()
 
 		RelativeLayout:
 			Button:
