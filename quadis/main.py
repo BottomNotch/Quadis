@@ -82,7 +82,8 @@ def add_card(csv_data, card_dict):
         for item in csv_layout:
             row_list.append(card_dict[item])
 
-        if card_dict['last_used_date'] is 'N/A' or check_date(card_dict['last_used_date']) is 0:
+        if (card_dict['last_used_date'] == 'N/A' or
+        check_date(card_dict['last_used_date']) is 0):
             csv_writer.writerow(row_list)
             return_val = 0
         else:
@@ -114,6 +115,7 @@ def change_card(csv_data, card_num, card_dict):
     csv_file = open(csv_data)
     csv_list = list(csv.reader(csv_file, delimiter=','))
     csv_file.close()  # So the csv file can be opened in write mode
+    card_info_dict = card_info(csv_data, card_dict['card_num'])
     csv_file = open(csv_data, 'w')
     csv_writer = csv.writer(csv_file, delimiter=',')
 
@@ -123,10 +125,11 @@ def change_card(csv_data, card_num, card_dict):
                        # 2: the new card number already exists
                        # 3: invalid date
 
-    if card_info(csv_data, card_dict['card_num']) != 1:
+    if card_info_dict != 1 and card_num != card_dict['card_num']:
         return_val = 2
 
-    elif check_date(card_dict['last_used_date']) is 1:
+    elif (card_dict['last_used_date'] != 'N/A' and
+          check_date(card_dict['last_used_date']) is 1):
         return_val = 3
 
     else:
