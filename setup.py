@@ -20,6 +20,7 @@ requirements = [
     # TODO: put package requirements here
     'click',
     'kivy',
+    'Cython==0.25'
 ]
 
 test_requirements = [
