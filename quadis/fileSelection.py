@@ -10,3 +10,10 @@ class fileSelectDialog(QtWidgets.QDialog, Ui_fileSelectDialog):
 
     def selectFile(self):
         self.pathLineEdit.setText(QtWidgets.QFileDialog.getOpenFileName()[0])
+
+    def newFile(self, reason):
+        if reason is 'not_a_file':
+            self.label.setText('<html><head/><body><p align="center"><span style=" font-size:12pt; font-weight:600; color:#ff0000;">file does not exist, please select a new one</span></p></body></html>')
+        if reason is 'change_file':
+            self.label.setText('<html><head/><body><p align="center"><span style=" font-size:12pt; font-weight:600;">please select a new file</span></p></body></html>')
+        self.show()
