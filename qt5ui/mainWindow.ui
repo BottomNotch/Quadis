@@ -335,7 +335,7 @@
      </spacer>
     </item>
     <item>
-     <widget class="QWidget" name="widget" native="true">
+     <widget class="QWidget" name="mainButtons" native="true">
       <property name="maximumSize">
        <size>
         <width>16777215</width>
@@ -375,7 +375,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QWidget" name="widget" native="true">
+     <widget class="QWidget" name="editAddButtons" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
