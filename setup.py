@@ -19,8 +19,7 @@ with open(path.join(here, 'HISTORY.rst'), encoding='utf-8') as history_file:
 requirements = [
     # TODO: put package requirements here
     'click',
-    'kivy',
-    'Cython==0.25'
+    'PyQt5',
 ]
 
 test_requirements = [
@@ -41,6 +40,7 @@ setup(
         'console_scripts':[
             'quadis=quadis.cli:cli',
             'quadis-gui=quadis.gui:gui',
+            'quadis-qt5=quadis.guiQt5:gui',
             ],
         },
     include_package_data=True,
