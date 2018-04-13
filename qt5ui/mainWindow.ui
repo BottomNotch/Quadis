@@ -366,7 +366,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="modifyButton">
+        <widget class="QPushButton" name="addModButton">
          <property name="text">
           <string>modify card</string>
          </property>

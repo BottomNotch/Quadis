@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '../qt5ui/mainWindow.ui'
+# Form implementation generated from reading ui file 'qt5ui/mainWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.10.1
 #
@@ -158,9 +158,9 @@ class Ui_MainWindow(object):
         self.checkinButton = QtWidgets.QPushButton(self.mainButtons)
         self.checkinButton.setObjectName("checkinButton")
         self.buttonLayout.addWidget(self.checkinButton)
-        self.modifyButton = QtWidgets.QPushButton(self.mainButtons)
-        self.modifyButton.setObjectName("modifyButton")
-        self.buttonLayout.addWidget(self.modifyButton)
+        self.addModButton = QtWidgets.QPushButton(self.mainButtons)
+        self.addModButton.setObjectName("addModButton")
+        self.buttonLayout.addWidget(self.addModButton)
         self.removeButton = QtWidgets.QPushButton(self.mainButtons)
         self.removeButton.setObjectName("removeButton")
         self.buttonLayout.addWidget(self.removeButton)
@@ -212,7 +212,7 @@ class Ui_MainWindow(object):
         self.zipCodeLabel.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">zip code:</span></p></body></html>"))
         self.LastUsedLabel.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">last used on:</span></p></body></html>"))
         self.checkinButton.setText(_translate("MainWindow", "check-in card"))
-        self.modifyButton.setText(_translate("MainWindow", "modify card"))
+        self.addModButton.setText(_translate("MainWindow", "modify card"))
         self.removeButton.setText(_translate("MainWindow", "remove card"))
         self.settingsButton.setText(_translate("MainWindow", "settings"))
         self.finishCheckinButton.setText(_translate("MainWindow", "finish and check-in card"))
