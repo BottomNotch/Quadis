@@ -9,7 +9,8 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.confirmButton.clicked.connect(self.check_card)
+        self.confirmButton.clicked.connect(lambda: self.check_card(False))
+        self.checkinButton.clicked.connect(lambda: self.check_card(True))
 
     def showUI(self, filePath, fileSelectionShow):
         file = Path(filePath)
@@ -24,24 +25,45 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.changeFile = fileSelectionShow
             self.show()
 
-    def check_card(self):
-        result = main.check_card(self.windowTitle(), self.numLineEdit.text(), update_card=False)
+    def buttonsEnabled(self, checkin, addMod, remove):
+        self.checkinButton.setEnabled(checkin)
+        self.addModButton.setEnabled(addMod)
+        self.removeButton.setEnabled(remove)
+
+    def check_card(self, update_card):
+        result = main.check_card(self.windowTitle(), self.numLineEdit.text(),
+                                 update_card=update_card)
 
         if result is 0:
             self.label.setText(plainToHTML('card not found', font_size='14',
             bold=True, color='ff0000'))
+            self.buttonsEnabled(False, True, False)
+            self.addModButton.setText('add card')
 
         elif result is 1:
-            self.label.setText(
-                plainToHTML('card found and has not been used today',
-                            font_size='14', bold=True, color='00ff00'))
-            self.display_card_info()
+            if update_card is False:
+                self.label.setText(
+                    plainToHTML('card found and has not been used today',
+                                font_size='14', bold=True, color='00ff00'))
+                self.display_card_info()
+                self.buttonsEnabled(True, True, True)
+                self.addModButton.setText('modify card')
+
+            else:
+                self.label.setText(
+                    plainToHTML('card checked in',
+                                font_size='14', bold=True, color='00ff00'))
+                self.display_card_info()
+                self.buttonsEnabled(False, True, True)
+                self.addModButton.setText('modify card')
 
         elif result is 2:
             self.label.setText(
                 plainToHTML('card found and has been used today',
                             font_size='14', bold=True, color='ff0000'))
             self.display_card_info()
+            self.buttonsEnabled(False, True, True)
+            self.addModButton.setText('modify card')
 
         else:
             self.label.setText(
