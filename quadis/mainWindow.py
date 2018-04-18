@@ -9,8 +9,11 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.buttonsLayoutMax = self.editAddButtons.maximumHeight()
+        self.lastUsedMax = self.lastUsedDateEdit.maximumHeight()
         self.confirmButton.clicked.connect(lambda: self.check_card(False))
         self.checkinButton.clicked.connect(lambda: self.check_card(True))
+        self.addModButton.clicked.connect(lambda: self.editMode(True))
 
     def showUI(self, filePath, fileSelectionShow):
         file = Path(filePath)
@@ -21,7 +24,8 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.fileButton.clicked.connect(lambda:
                                             fileSelectionShow('change_file'))
             self.setWindowTitle(filePath)
-            self.editAddButtons.setMaximumHeight(0)
+            self.showModifyButtons(False)
+            self.showLastUsed(False)
             self.changeFile = fileSelectionShow
             self.show()
 
@@ -39,6 +43,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             bold=True, color='ff0000'))
             self.buttonsEnabled(False, True, False)
             self.addModButton.setText('add card')
+            self.showLastUsed(False)
 
         elif result is 1:
             if update_card is False:
@@ -48,6 +53,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.display_card_info()
                 self.buttonsEnabled(True, True, True)
                 self.addModButton.setText('modify card')
+                self.showLastUsed(True)
 
             else:
                 self.label.setText(
@@ -56,6 +62,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.display_card_info()
                 self.buttonsEnabled(False, True, True)
                 self.addModButton.setText('modify card')
+                self.showLastUsed(True)
 
         elif result is 2:
             self.label.setText(
@@ -64,6 +71,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.display_card_info()
             self.buttonsEnabled(False, True, True)
             self.addModButton.setText('modify card')
+            self.showLastUsed(True)
 
         else:
             self.label.setText(
@@ -81,3 +89,42 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.zipCodeLineEdit.setText(card_dict['zip'])
         self.lastUsedDateEdit.setDate(datetime.strptime(
             card_dict['last_used_date'], '%m/%d/%Y'))
+
+
+    def feildsSetReadOnly(self, readOnly):
+        self.nameLineEdit.setReadOnly(readOnly)
+        self.under13SpinBox.setReadOnly(readOnly)
+        self.over12SpinBox.setReadOnly(readOnly)
+        self.under60SpinBox.setReadOnly(readOnly)
+        self.over59SpinBox.setReadOnly(readOnly)
+        self.zipCodeLineEdit.setReadOnly(readOnly)
+
+    def showModifyButtons(self, show_buttons):
+        if show_buttons:
+            self.editAddButtons.setMaximumHeight(self.buttonsLayoutMax)
+            self.buttonsLayoutMax = self.mainButtons.maximumHeight()
+            self.mainButtons.setMaximumHeight(0)
+
+        if not show_buttons:
+            self.mainButtons.setMaximumHeight(self.buttonsLayoutMax)
+            self.buttonsLayoutMax = self.editAddButtons.maximumHeight()
+            self.editAddButtons.setMaximumHeight(0)
+
+    def editMode(self, editMode):
+        self.feildsSetReadOnly(True if editMode is False else False)
+        self.showModifyButtons(editMode)
+        if editMode:
+            self.showLastUsed(False)
+            self.confirmButton.setEnabled(False)
+            self.fileButton.setEnabled(False)
+
+        else:
+            self.confirmButton.setEnabled(True)
+            self.fileButton.setEnabled(True)
+
+    def showLastUsed(self, show):
+        if show:
+            self.lastUsedLayout.setMaximumHeight(self.lastUsedMax)
+
+        else:
+            self.lastUsedLayout.setMaximumHeight(0)

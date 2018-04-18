@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'qt5ui/mainWindow.ui'
+# Form implementation generated from reading ui file '../qt5ui/mainWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.10.1
 #
@@ -133,19 +133,22 @@ class Ui_MainWindow(object):
         spacerItem4 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.zipCodeLayout.addItem(spacerItem4)
         self.verticalLayout_2.addLayout(self.zipCodeLayout)
-        self.lastUsedLayout = QtWidgets.QHBoxLayout()
+        self.lastUsedLayout = QtWidgets.QWidget(self.feilds)
         self.lastUsedLayout.setObjectName("lastUsedLayout")
-        self.LastUsedLabel = QtWidgets.QLabel(self.feilds)
+        self.lastUsedLayout_2 = QtWidgets.QHBoxLayout(self.lastUsedLayout)
+        self.lastUsedLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.lastUsedLayout_2.setObjectName("lastUsedLayout_2")
+        self.LastUsedLabel = QtWidgets.QLabel(self.lastUsedLayout)
         self.LastUsedLabel.setObjectName("LastUsedLabel")
-        self.lastUsedLayout.addWidget(self.LastUsedLabel)
-        self.lastUsedDateEdit = QtWidgets.QDateEdit(self.feilds)
+        self.lastUsedLayout_2.addWidget(self.LastUsedLabel)
+        self.lastUsedDateEdit = QtWidgets.QDateEdit(self.lastUsedLayout)
         self.lastUsedDateEdit.setReadOnly(True)
         self.lastUsedDateEdit.setCalendarPopup(True)
         self.lastUsedDateEdit.setObjectName("lastUsedDateEdit")
-        self.lastUsedLayout.addWidget(self.lastUsedDateEdit)
+        self.lastUsedLayout_2.addWidget(self.lastUsedDateEdit)
         spacerItem5 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.lastUsedLayout.addItem(spacerItem5)
-        self.verticalLayout_2.addLayout(self.lastUsedLayout)
+        self.lastUsedLayout_2.addItem(spacerItem5)
+        self.verticalLayout_2.addWidget(self.lastUsedLayout)
         self.verticalLayout.addWidget(self.feilds)
         spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem6)
