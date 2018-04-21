@@ -9,13 +9,14 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.buttonsLayoutMax = self.editAddButtons.maximumHeight()
-        self.lastUsedMax = self.lastUsedDateEdit.maximumHeight()
         self.confirmButton.clicked.connect(lambda: self.check_card(False))
         self.checkinButton.clicked.connect(lambda: self.check_card(True))
         self.addModButton.clicked.connect(lambda: self.editMode(True))
+        self.cancelButton.clicked.connect(lambda: self.confirmPopup(
+            'are you sure you want to cancel? any unsaved changes will be lost',
+            'cancel'))
 
-    def showUI(self, filePath, fileSelectionShow):
+    def showUI(self, filePath, fileSelectionShow, showConfirmDialog):
         file = Path(filePath)
         if not file.is_file():
             fileSelectionShow('not_a_file')
@@ -23,9 +24,10 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             self.fileButton.clicked.connect(lambda:
                                             fileSelectionShow('change_file'))
+            self.showConfirmDialog = showConfirmDialog
             self.setWindowTitle(filePath)
             self.showModifyButtons(False)
-            self.showLastUsed(False)
+            self.lastUsedLayout.setHidden(True)
             self.changeFile = fileSelectionShow
             self.show()
 
@@ -43,7 +45,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             bold=True, color='ff0000'))
             self.buttonsEnabled(False, True, False)
             self.addModButton.setText('add card')
-            self.showLastUsed(False)
+            self.lastUsedLayout.setHidden(True)
 
         elif result is 1:
             if update_card is False:
@@ -53,7 +55,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.display_card_info()
                 self.buttonsEnabled(True, True, True)
                 self.addModButton.setText('modify card')
-                self.showLastUsed(True)
+                self.lastUsedLayout.setHidden(False)
 
             else:
                 self.label.setText(
@@ -62,7 +64,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.display_card_info()
                 self.buttonsEnabled(False, True, True)
                 self.addModButton.setText('modify card')
-                self.showLastUsed(True)
+                self.lastUsedLayout.setHidden(False)
 
         elif result is 2:
             self.label.setText(
@@ -71,7 +73,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.display_card_info()
             self.buttonsEnabled(False, True, True)
             self.addModButton.setText('modify card')
-            self.showLastUsed(True)
+            self.lastUsedLayout.setHidden(False)
 
         else:
             self.label.setText(
@@ -100,21 +102,14 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.zipCodeLineEdit.setReadOnly(readOnly)
 
     def showModifyButtons(self, show_buttons):
-        if show_buttons:
-            self.editAddButtons.setMaximumHeight(self.buttonsLayoutMax)
-            self.buttonsLayoutMax = self.mainButtons.maximumHeight()
-            self.mainButtons.setMaximumHeight(0)
-
-        if not show_buttons:
-            self.mainButtons.setMaximumHeight(self.buttonsLayoutMax)
-            self.buttonsLayoutMax = self.editAddButtons.maximumHeight()
-            self.editAddButtons.setMaximumHeight(0)
+        self.editAddButtons.setHidden(True if show_buttons is False else False)
+        self.mainButtons.setHidden(show_buttons)
 
     def editMode(self, editMode):
         self.feildsSetReadOnly(True if editMode is False else False)
         self.showModifyButtons(editMode)
         if editMode:
-            self.showLastUsed(False)
+            self.lastUsedLayout.setHidden(True)
             self.confirmButton.setEnabled(False)
             self.fileButton.setEnabled(False)
 
@@ -122,9 +117,14 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.confirmButton.setEnabled(True)
             self.fileButton.setEnabled(True)
 
-    def showLastUsed(self, show):
-        if show:
-            self.lastUsedLayout.setMaximumHeight(self.lastUsedMax)
+    def confirmPopup(self, text, action):
+        self.feildsSetReadOnly(True)
+        self.showConfirmDialog(text, self.confirmClose, action)
 
-        else:
-            self.lastUsedLayout.setMaximumHeight(0)
+    def confirmClose(self, action):
+        if action is None:
+            self.feildsSetReadOnly(False)
+
+        if action is 'cancel':
+            self.editMode(False)
+            self.check_card(False)
