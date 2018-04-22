@@ -12,6 +12,13 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.confirmButton.clicked.connect(lambda: self.check_card(False))
         self.checkinButton.clicked.connect(lambda: self.check_card(True))
         self.addModButton.clicked.connect(lambda: self.editMode(True))
+
+        self.finishCheckinButton.clicked.connect(lambda: self.confirmPopup(
+            'are you sure you want to save and check the card in?',
+            'mod and check in'))
+        self.finishButton.clicked.connect(lambda: self.confirmPopup(
+            'are you sure you want to save?',
+            'modify card'))
         self.cancelButton.clicked.connect(lambda: self.confirmPopup(
             'are you sure you want to cancel? any unsaved changes will be lost',
             'cancel'))
@@ -92,6 +99,30 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lastUsedDateEdit.setDate(datetime.strptime(
             card_dict['last_used_date'], '%m/%d/%Y'))
 
+    def set_card_info(self, new_card):
+        card_dict = dict()
+
+        card_dict['card_num'] = self.numLineEdit.text()
+        card_dict['name'] = self.nameLineEdit.text()
+        card_dict['under_13'] = self.under13SpinBox.value()
+        card_dict['under_18'] = str(self.over12SpinBox.value())
+        card_dict['under_60'] = str(self.under60SpinBox.value())
+        card_dict['over_59'] = str(self.over59SpinBox.value())
+        card_dict['zip'] = self.zipCodeLineEdit.text()
+
+        if self.lastUsedDateEdit.isReadOnly() and new_card:
+            card_dict['N/A']
+
+        else:
+            card_dict['last_used_date'] = str(
+                self.lastUsedDateEdit.date().toString('MM/dd/yyyy'))
+
+        if new_card:
+            main.add_card(self.windowTitle(), card_dict)
+
+        else:
+            main.change_card(self.windowTitle(), card_dict['card_num'],
+                        card_dict)
 
     def feildsSetReadOnly(self, readOnly):
         self.nameLineEdit.setReadOnly(readOnly)
@@ -125,6 +156,13 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if action is None:
             self.feildsSetReadOnly(False)
 
-        if action is 'cancel':
+        if action == 'cancel':
             self.editMode(False)
             self.check_card(False)
+
+        if action == 'modify card' or action == 'mod and check in':
+            self.editMode(False)
+            self.set_card_info(
+                True if self.addModButton.text() == 'add card' else False)
+            self.check_card(True if action == 'mod and check in' else False)
+                
