@@ -9,6 +9,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.feilds.setHidden(True)
         self.confirmButton.clicked.connect(lambda: self.check_card(False))
         self.checkinButton.clicked.connect(lambda: self.check_card(True))
         self.addModButton.clicked.connect(lambda: self.editMode(True))
@@ -53,6 +54,8 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.buttonsEnabled(False, True, False)
             self.addModButton.setText('add card')
             self.lastUsedLayout.setHidden(True)
+            self.clear_card_info()
+            self.feilds.setHidden(True)
 
         elif result is 1:
             if update_card is False:
@@ -63,6 +66,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.display_card_info()
                 self.buttonsEnabled(True, True, True)
                 self.addModButton.setText('modify card')
+                self.feilds.setHidden(False)
 
             else:
                 self.label.setText(
@@ -72,6 +76,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.display_card_info()
                 self.buttonsEnabled(False, True, True)
                 self.addModButton.setText('modify card')
+                self.feilds.setHidden(False)
 
         elif result is 2:
             self.label.setText(
@@ -81,6 +86,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.display_card_info()
             self.buttonsEnabled(False, True, True)
             self.addModButton.setText('modify card')
+            self.feilds.setHidden(False)
 
         else:
             self.label.setText(
@@ -112,6 +118,14 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             self.lastUsedDateEdit.setDate(datetime.strptime(
             card_dict['last_used_date'], '%m/%d/%Y'))
+
+    def clear_card_info(self):
+        self.nameLineEdit.setText('')
+        self.under13SpinBox.setValue(0)
+        self.over12SpinBox.setValue(0)
+        self.under60SpinBox.setValue(0)
+        self.over59SpinBox.setValue(0)
+        self.zipCodeLineEdit.setText('')
 
     def set_card_info(self, new_card):
         card_dict = dict()
@@ -151,6 +165,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.mainButtons.setHidden(show_buttons)
 
     def editMode(self, editMode):
+        self.feilds.setHidden(False)
         self.feildsSetReadOnly(True if editMode is False else False)
         self.showModifyButtons(editMode)
         if editMode:
