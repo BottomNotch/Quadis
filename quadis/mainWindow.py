@@ -10,6 +10,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.feilds.setHidden(True)
+        self.numLineEdit.editingFinished(lambda: self.check_card(False))
         self.confirmButton.clicked.connect(lambda: self.check_card(False))
         self.checkinButton.clicked.connect(lambda: self.check_card(True))
         self.addModButton.clicked.connect(lambda: self.editMode(True))
