@@ -59,33 +59,42 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.label.setText(
                     plainToHTML('card found and has not been used today',
                                 font_size='14', bold=True, color='00ff00'))
+                self.lastUsedLayout.setHidden(False)
                 self.display_card_info()
                 self.buttonsEnabled(True, True, True)
                 self.addModButton.setText('modify card')
-                self.lastUsedLayout.setHidden(False)
 
             else:
                 self.label.setText(
                     plainToHTML('card checked in',
                                 font_size='14', bold=True, color='00ff00'))
+                self.lastUsedLayout.setHidden(False)
                 self.display_card_info()
                 self.buttonsEnabled(False, True, True)
                 self.addModButton.setText('modify card')
-                self.lastUsedLayout.setHidden(False)
 
         elif result is 2:
             self.label.setText(
                 plainToHTML('card found and has been used today',
                             font_size='14', bold=True, color='ff0000'))
+            self.lastUsedLayout.setHidden(False)
             self.display_card_info()
             self.buttonsEnabled(False, True, True)
             self.addModButton.setText('modify card')
-            self.lastUsedLayout.setHidden(False)
 
         else:
             self.label.setText(
                 plainToHTML('unkown error',
                             font_size='14', bold=True, color='ff0000'))
+
+        self.numLineEdit.setEnabled(False)
+        self.confirmButton.setText("new number")
+        self.confirmButton.clicked.connect(self.new_number)
+
+    def new_number(self):
+        self.numLineEdit.setEnabled(True)
+        self.confirmButton.setText("confirm")
+        self.confirmButton.clicked.connect(lambda: self.check_card(False))
 
     def display_card_info(self):
         card_dict = main.card_info(self.windowTitle(), self.numLineEdit.displayText())
@@ -96,7 +105,12 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.under60SpinBox.setValue(int(card_dict['under_60']))
         self.over59SpinBox.setValue(int(card_dict['over_59']))
         self.zipCodeLineEdit.setText(card_dict['zip'])
-        self.lastUsedDateEdit.setDate(datetime.strptime(
+
+        if(card_dict['last_used_date'] == 'N/A'):
+            self.lastUsedLayout.setHidden(True)
+
+        else:
+            self.lastUsedDateEdit.setDate(datetime.strptime(
             card_dict['last_used_date'], '%m/%d/%Y'))
 
     def set_card_info(self, new_card):
@@ -111,7 +125,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         card_dict['zip'] = self.zipCodeLineEdit.text()
 
         if self.lastUsedDateEdit.isReadOnly() and new_card:
-            card_dict['N/A']
+            card_dict['last_used_date'] = 'N/A'
 
         else:
             card_dict['last_used_date'] = str(
@@ -153,7 +167,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.showConfirmDialog(text, self.confirmClose, action)
 
     def confirmClose(self, action):
-        if action is None:
+        if action == None:
             self.feildsSetReadOnly(False)
 
         if action == 'cancel':
@@ -165,4 +179,3 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.set_card_info(
                 True if self.addModButton.text() == 'add card' else False)
             self.check_card(True if action == 'mod and check in' else False)
-                
