@@ -107,10 +107,10 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         card_dict = main.card_info(self.windowTitle(), self.numLineEdit.displayText())
 
         self.nameLineEdit.setText(card_dict['name'])
-        self.under13SpinBox.setValue(int(card_dict['under_13']))
-        self.over12SpinBox.setValue(int(card_dict['under_18']))
-        self.under60SpinBox.setValue(int(card_dict['under_60']))
-        self.over59SpinBox.setValue(int(card_dict['over_59']))
+        self.under13SpinBox.setValue(int(card_dict['under_13']) if card_dict['under_13'] != '' else 0)
+        self.over12SpinBox.setValue(int(card_dict['under_18']) if card_dict['under_18'] != '' else 0)
+        self.under60SpinBox.setValue(int(card_dict['under_60']) if card_dict['under_60'] != '' else 0)
+        self.over59SpinBox.setValue(int(card_dict['over_59']) if card_dict['over_59'] != '' else 0)
         self.zipCodeLineEdit.setText(card_dict['zip'])
 
         if(card_dict['last_used_date'] == 'N/A'):
