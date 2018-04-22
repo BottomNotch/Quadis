@@ -89,7 +89,7 @@ def add_card(csv_data, card_dict):
 
     else:
         for item in csv_layout:
-            if item != 'all_dates_used':
+            if item != 'all_used_dates':
                 row_list.append(card_dict[item])
 
         if (card_dict['last_used_date'] == 'N/A' or
