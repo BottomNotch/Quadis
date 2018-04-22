@@ -3,7 +3,7 @@ import csv
 from datetime import datetime
 
 csv_layout = ['card_num', 'name','under_13', 'under_18', 'under_60',
-              'over_59', 'zip', 'last_used_date']
+              'over_59', 'zip', 'last_used_date', 'all_used_dates']
 
 date_today = datetime.now()
 
@@ -27,7 +27,8 @@ def card_info(csv_data, card_num):
     for row in csv_reader:
         if row[csv_layout.index('card_num')] == card_num:
             for item in csv_layout:
-                card_dict[item] = row[csv_layout.index(item)]
+                if item != 'all_used_dates':
+                    card_dict[item] = row[csv_layout.index(item)]
             card_dict['row_num'] = index
             return card_dict
         index += 1
@@ -57,10 +58,18 @@ def check_card(csv_data, card_num, update_card=True):
                 csv_list[card_dict['row_num']]\
                 [csv_layout.index('last_used_date')] =\
                 date_today.strftime('%m/%d/%Y')
+
+                try:
+                    csv_list[card_dict['row_num']]\
+                    [csv_layout.index('all_used_dates')] +=\
+                    '@' + date_today.strftime('%m/%d/%Y')
+                except IndexError: 
+                    csv_list[card_dict['row_num']].append('@' + date_today.strftime('%m/%d/%Y'))
+
             return_val = 1  #card found and not used today
     else:
         return_val = 0  #card not found
-
+ 
     csv_writer.writerows(csv_list)
     csv_file.close()
     return return_val
@@ -80,7 +89,8 @@ def add_card(csv_data, card_dict):
 
     else:
         for item in csv_layout:
-            row_list.append(card_dict[item])
+            if item != 'all_dates_used':
+                row_list.append(card_dict[item])
 
         if (card_dict['last_used_date'] == 'N/A' or
         check_date(card_dict['last_used_date']) is 0):
@@ -136,7 +146,8 @@ def change_card(csv_data, card_num, card_dict):
         for row in csv_list:
             if card_num == row[csv_layout.index('card_num')]:
                 for item in csv_layout:
-                    row[csv_layout.index(item)] = card_dict[item]
+                    if item != 'all_used_dates':
+                        row[csv_layout.index(item)] = card_dict[item]
                 return_val = 0
                 break
 
