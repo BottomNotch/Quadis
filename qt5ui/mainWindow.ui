@@ -126,6 +126,11 @@
          </item>
          <item>
           <widget class="QSpinBox" name="under13SpinBox">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -157,6 +162,11 @@
          </item>
          <item>
           <widget class="QSpinBox" name="over12SpinBox">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -188,6 +198,11 @@
          </item>
          <item>
           <widget class="QSpinBox" name="under60SpinBox">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -219,6 +234,11 @@
          </item>
          <item>
           <widget class="QSpinBox" name="over59SpinBox">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -289,6 +309,9 @@
        </item>
        <item>
         <widget class="QWidget" name="lastUsedLayout" native="true">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <layout class="QHBoxLayout" name="lastUsedLayout_2">
           <property name="leftMargin">
            <number>0</number>
@@ -304,6 +327,9 @@
           </property>
           <item>
            <widget class="QLabel" name="LastUsedLabel">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;last used on:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -311,6 +337,11 @@
           </item>
           <item>
            <widget class="QDateEdit" name="lastUsedDateEdit">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
             <property name="readOnly">
              <bool>true</bool>
             </property>

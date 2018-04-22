@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '../qt5ui/mainWindow.ui'
+# Form implementation generated from reading ui file 'qt5ui/mainWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.10.1
 #
@@ -72,6 +72,9 @@ class Ui_MainWindow(object):
         self.under13Label.setObjectName("under13Label")
         self.under13Layout.addWidget(self.under13Label)
         self.under13SpinBox = QtWidgets.QSpinBox(self.feilds)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.under13SpinBox.setFont(font)
         self.under13SpinBox.setReadOnly(True)
         self.under13SpinBox.setObjectName("under13SpinBox")
         self.under13Layout.addWidget(self.under13SpinBox)
@@ -84,6 +87,9 @@ class Ui_MainWindow(object):
         self.over12Label.setObjectName("over12Label")
         self.over12Layout.addWidget(self.over12Label)
         self.over12SpinBox = QtWidgets.QSpinBox(self.feilds)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.over12SpinBox.setFont(font)
         self.over12SpinBox.setReadOnly(True)
         self.over12SpinBox.setObjectName("over12SpinBox")
         self.over12Layout.addWidget(self.over12SpinBox)
@@ -96,6 +102,9 @@ class Ui_MainWindow(object):
         self.under60Label.setObjectName("under60Label")
         self.under60Layout.addWidget(self.under60Label)
         self.under60SpinBox = QtWidgets.QSpinBox(self.feilds)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.under60SpinBox.setFont(font)
         self.under60SpinBox.setReadOnly(True)
         self.under60SpinBox.setObjectName("under60SpinBox")
         self.under60Layout.addWidget(self.under60SpinBox)
@@ -108,6 +117,9 @@ class Ui_MainWindow(object):
         self.over59Label.setObjectName("over59Label")
         self.over59Layout.addWidget(self.over59Label)
         self.over59SpinBox = QtWidgets.QSpinBox(self.feilds)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.over59SpinBox.setFont(font)
         self.over59SpinBox.setReadOnly(True)
         self.over59SpinBox.setObjectName("over59SpinBox")
         self.over59Layout.addWidget(self.over59SpinBox)
@@ -134,14 +146,19 @@ class Ui_MainWindow(object):
         self.zipCodeLayout.addItem(spacerItem4)
         self.verticalLayout_2.addLayout(self.zipCodeLayout)
         self.lastUsedLayout = QtWidgets.QWidget(self.feilds)
+        self.lastUsedLayout.setEnabled(True)
         self.lastUsedLayout.setObjectName("lastUsedLayout")
         self.lastUsedLayout_2 = QtWidgets.QHBoxLayout(self.lastUsedLayout)
         self.lastUsedLayout_2.setContentsMargins(0, 0, 0, 0)
         self.lastUsedLayout_2.setObjectName("lastUsedLayout_2")
         self.LastUsedLabel = QtWidgets.QLabel(self.lastUsedLayout)
+        self.LastUsedLabel.setEnabled(True)
         self.LastUsedLabel.setObjectName("LastUsedLabel")
         self.lastUsedLayout_2.addWidget(self.LastUsedLabel)
         self.lastUsedDateEdit = QtWidgets.QDateEdit(self.lastUsedLayout)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.lastUsedDateEdit.setFont(font)
         self.lastUsedDateEdit.setReadOnly(True)
         self.lastUsedDateEdit.setCalendarPopup(True)
         self.lastUsedDateEdit.setObjectName("lastUsedDateEdit")
