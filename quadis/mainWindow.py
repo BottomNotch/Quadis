@@ -104,6 +104,7 @@ class mainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.numLineEdit.setText('')
         self.feilds.setHidden(True)
         self.clear_card_info()
+        self.numLineEdit.setFocus(True)
         self.confirmButton.clicked.connect(lambda: self.check_card(False))
 
     def display_card_info(self):
